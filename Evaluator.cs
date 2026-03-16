@@ -90,8 +90,8 @@ internal class Evaluator
         }
         else if (node is Ast.BinaryOperation binary)
         {
-            FlattenAST(binary.X, commands);
             FlattenAST(binary.Y, commands);
+            FlattenAST(binary.X, commands);
             commands.Add(binary.Kind switch
             {
                 BinaryOp.Add => new AddCommand(),
