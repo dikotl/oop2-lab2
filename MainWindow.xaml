@@ -83,6 +83,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -122,39 +123,39 @@
             </Viewbox>
         </Grid>
 
-        <Button Content="7"
+        <Button Content="CE"
                 Grid.Row="1"
                 Grid.Column="0"
                 Margin="2"
                 FontSize="20"
-                Click="NumberButton_Click"
-                Background="{StaticResource NumberBtnBrush}" 
+                Click="UndoButton_Click"
+                Background="{StaticResource RedBrush}" 
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
-                BorderBrush="#444"/>
+                BorderBrush="{StaticResource BrightRedBrush}"/>
         
-        <Button Content="8"
+        <Button Content="C"
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="2"
                 FontSize="20"
-                Click="NumberButton_Click"
-                Background="{StaticResource NumberBtnBrush}" 
+                Click="ClearButton_Click"
+                Background="{StaticResource RedBrush}" 
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
-                BorderBrush="#444"/>
-        
-        <Button Content="9"
+                BorderBrush="{StaticResource BrightRedBrush}"/>
+
+        <Button Content="⌫"
                 Grid.Row="1"
                 Grid.Column="2"
                 Margin="2"
                 FontSize="20"
-                Click="NumberButton_Click"
+                Click="EraseButton_Click"
                 Background="{StaticResource NumberBtnBrush}" 
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
-        
+
         <Button Content="/"
                 Grid.Row="1"
                 Grid.Column="3"
@@ -166,7 +167,7 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button Content="4"
+        <Button Content="7"
                 Grid.Row="2"
                 Grid.Column="0"
                 Margin="2"
@@ -176,8 +177,8 @@
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
-
-        <Button Content="5"
+        
+        <Button Content="8"
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="2"
@@ -187,8 +188,8 @@
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
-
-        <Button Content="6"
+        
+        <Button Content="9"
                 Grid.Row="2"
                 Grid.Column="2"
                 Margin="2"
@@ -210,7 +211,7 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button Content="1"
+        <Button Content="4"
                 Grid.Row="3"
                 Grid.Column="0"
                 Margin="2"
@@ -221,7 +222,7 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button Content="2"
+        <Button Content="5"
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="2"
@@ -232,7 +233,7 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button Content="3"
+        <Button Content="6"
                 Grid.Row="3"
                 Grid.Column="2"
                 Margin="2"
@@ -254,18 +255,18 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button Content="C"
+        <Button Content="1"
                 Grid.Row="4"
                 Grid.Column="0"
                 Margin="2"
                 FontSize="20"
-                Click="ClearButton_Click"
-                Background="{StaticResource RedBrush}" 
+                Click="NumberButton_Click"
+                Background="{StaticResource NumberBtnBrush}" 
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
-                BorderBrush="{StaticResource BrightRedBrush}"/>
+                BorderBrush="#444"/>
 
-        <Button Content="0"
+        <Button Content="2"
                 Grid.Row="4"
                 Grid.Column="1"
                 Margin="2"
@@ -276,19 +277,16 @@
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
 
-        <Button x:Name="btnEval"
-                Content="="
+        <Button Content="3"
                 Grid.Row="4"
                 Grid.Column="2"
                 Margin="2"
                 FontSize="20"
-                Click="EqualsButton_Click"
-                Background="{StaticResource GreenBrush}" 
-                Foreground="Black" 
+                Click="NumberButton_Click"
+                Background="{StaticResource NumberBtnBrush}" 
+                Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
-                BorderBrush="{StaticResource BrightGreenBrush}"
-                IsDefault="True"
-                Style="{StaticResource EqualsButtonStyle}"/>
+                BorderBrush="#444"/>
 
         <Button Content="+"
                 Grid.Row="4"
@@ -300,5 +298,52 @@
                 Foreground="{StaticResource TextBrush}" 
                 BorderThickness="0.5" 
                 BorderBrush="#444"/>
+
+        <Button Content="00"
+                Grid.Row="5"
+                Grid.Column="0"
+                Margin="2"
+                FontSize="20"
+                Click="NumberButton_Click"
+                Background="{StaticResource NumberBtnBrush}" 
+                Foreground="{StaticResource TextBrush}" 
+                BorderThickness="0.5" 
+                BorderBrush="#444"/>
+        
+        <Button Content="0"
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="2"
+                FontSize="20"
+                Click="NumberButton_Click"
+                Background="{StaticResource NumberBtnBrush}" 
+                Foreground="{StaticResource TextBrush}" 
+                BorderThickness="0.5" 
+                BorderBrush="#444"/>
+
+        <Button Content="."
+                Grid.Row="5"
+                Grid.Column="2"
+                Margin="2"
+                FontSize="20"
+                Click="NumberButton_Click"
+                Background="{StaticResource NumberBtnBrush}" 
+                Foreground="{StaticResource TextBrush}" 
+                BorderThickness="0.5" 
+                BorderBrush="#444"/>
+        
+        <Button x:Name="btnEval"
+                Content="="
+                Grid.Row="5"
+                Grid.Column="3"
+                Margin="2"
+                FontSize="20"
+                Click="EqualsButton_Click"
+                Background="{StaticResource GreenBrush}" 
+                Foreground="Black" 
+                BorderThickness="0.5" 
+                BorderBrush="{StaticResource BrightGreenBrush}"
+                IsDefault="True"
+                Style="{StaticResource EqualsButtonStyle}"/>
     </Grid>
 </Window>
