@@ -20,6 +20,8 @@ internal class Evaluator
     {
         ["sqrt"] = new MathFunc(1, (args) => Math.Sqrt(args[0])),
         ["pow"] = new MathFunc(2, (args) => Math.Pow(args[0], args[1])),
+        ["ln"] = new MathFunc(1, (args) => Math.Log(args[0])),
+        ["log"] = new MathFunc(2, (args) => Math.Log(args[0], args[1])),
         ["abs"] = new MathFunc(1, (args) => Math.Abs(args[0])),
         ["sin"] = new MathFunc(1, (args) => Math.Sin(args[0])),
         ["cos"] = new MathFunc(1, (args) => Math.Cos(args[0])),

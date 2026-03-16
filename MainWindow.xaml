@@ -13,58 +13,6 @@
         ResizeMode="CanResize">
 
     <Window.Resources>
-        <Style TargetType="Button"
-               x:Key="EqualsButtonStyle">
-            <Setter Property="Margin"
-                    Value="3"/>
-            <Setter Property="FontSize"
-                    Value="20"/>
-            <Setter Property="Cursor"
-                    Value="Hand"/>
-            <Setter Property="Background"
-                    Value="{StaticResource GreenBrush}"/>
-            <Setter Property="Foreground"
-                    Value="{StaticResource TextBrush}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{StaticResource BrightGreenBrush}"
-                                BorderThickness="3"
-                                CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
-                        </Border>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="True">
-                                <Setter TargetName="border"
-                                        Property="Background"
-                                        Value="{StaticResource BrightGreenBrush}"/>
-                                <Setter TargetName="border"
-                                        Property="BorderBrush"
-                                        Value="#555555"/>
-                            </Trigger>
-
-                            <Trigger Property="IsPressed"
-                                     Value="True">
-                                <Setter TargetName="border"
-                                        Property="Background"
-                                        Value="#222222"/>
-                                <Setter TargetName="border"
-                                        Property="BorderThickness"
-                                        Value="3"/>
-                                <Setter TargetName="border"
-                                        Property="BorderBrush"
-                                        Value="#888888"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <Style TargetType="Button">
             <Setter Property="Margin"
                     Value="3"/>
@@ -82,7 +30,7 @@
                         <Border x:Name="border"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="#555555"
-                                BorderThickness="3"
+                                BorderThickness="2"
                                 CornerRadius="8">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"/>
@@ -106,7 +54,7 @@
                                         Value="#222222"/>
                                 <Setter TargetName="border"
                                         Property="BorderThickness"
-                                        Value="3"/>
+                                        Value="2"/>
                                 <Setter TargetName="border"
                                         Property="BorderBrush"
                                         Value="#888888"/>
@@ -179,248 +127,143 @@
         <Button Content="≡"
                 Grid.Row="0"
                 Grid.Column="0"
-                Click="ToggleScientific_Click"
-                Foreground="{StaticResource AccentBrush}"/>
+                Foreground="{StaticResource AccentBrush}"
+                Click="ToggleScientific_Click"/>
 
         <Button Content="↻"
                 Grid.Row="1"
                 Grid.Column="0"
-                Click="RedoButton_Click"
-                Background="{StaticResource NumberBtnBrush}"/>
+                Click="RedoButton_Click"/>
 
         <Button Content="CE"
                 Grid.Row="2"
                 Grid.Column="0"
-                Margin="2"
-                FontSize="20"
-                Click="UndoButton_Click"
                 Background="{StaticResource RedBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="{StaticResource BrightRedBrush}"/>
+                Click="UndoButton_Click"/>
 
         <Button Content="C"
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="2"
-                FontSize="20"
-                Click="ClearButton_Click"
                 Background="{StaticResource RedBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="{StaticResource BrightRedBrush}"/>
+                BorderBrush="{StaticResource BrightRedBrush}"
+                Click="ClearButton_Click"/>
 
         <Button Content="⌫"
                 Grid.Row="2"
                 Grid.Column="2"
-                Margin="2"
-                FontSize="20"
-                Click="EraseButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="EraseButton_Click"/>
 
         <Button Content="/"
                 Grid.Row="2"
                 Grid.Column="3"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="7"
                 Grid.Row="3"
                 Grid.Column="0"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="8"
                 Grid.Row="3"
                 Grid.Column="1"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="9"
                 Grid.Row="3"
                 Grid.Column="2"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="*"
                 Grid.Row="3"
                 Grid.Column="3"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="4"
                 Grid.Row="4"
                 Grid.Column="0"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="5"
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="6"
                 Grid.Row="4"
                 Grid.Column="2"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="-"
                 Grid.Row="4"
                 Grid.Column="3"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="1"
                 Grid.Row="5"
                 Grid.Column="0"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="2"
                 Grid.Row="5"
                 Grid.Column="1"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="3"
                 Grid.Row="5"
                 Grid.Column="2"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="+"
                 Grid.Row="5"
                 Grid.Column="3"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="00"
                 Grid.Row="6"
                 Grid.Column="0"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="0"
                 Grid.Row="6"
                 Grid.Column="1"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button Content="."
                 Grid.Row="6"
                 Grid.Column="2"
-                Margin="2"
-                FontSize="20"
-                Click="InputButton_Click"
-                Background="{StaticResource NumberBtnBrush}"
-                Foreground="{StaticResource TextBrush}"
-                BorderThickness="0.5"
-                BorderBrush="#444"/>
+                Click="InputButton_Click"/>
 
         <Button x:Name="btnEval"
                 Content="="
                 Grid.Row="6"
                 Grid.Column="3"
-                Margin="2"
-                FontSize="20"
-                Click="EvalButton_Click"
                 Background="{StaticResource GreenBrush}"
-                Foreground="Black"
-                BorderThickness="0.5"
-                BorderBrush="{StaticResource BrightGreenBrush}"
                 IsDefault="True"
-                Style="{StaticResource EqualsButtonStyle}"/>
+                Click="EvalButton_Click"/>
 
-        <Button Content="log"
+        <Button Content="Pi"
                 Grid.Row="2"
-                Grid.Column="4"/>
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
 
-        <Button Content="pow"
+        <Button Content="E"
                 Grid.Row="3"
-                Grid.Column="4"/>
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
 
         <Button Content="sqrt"
                 Grid.Row="4"
-                Grid.Column="4"/>
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
+
+        <Button Content="pow"
+                Grid.Row="5"
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
+
+        <Button Content="log"
+                Grid.Row="6"
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
     </Grid>
 </Window>

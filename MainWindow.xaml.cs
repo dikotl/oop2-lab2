@@ -145,4 +145,30 @@ public partial class MainWindow : Window
         _isScientificVisible = !_isScientificVisible;
         BeginAnimation(WidthProperty, widthAnimation);
     }
+
+    private void MathFunc_Click(object sender, RoutedEventArgs e)
+    {
+        switch (((Button)sender).Content)
+        {
+        case "Pi":
+            input.Text += "Pi";
+            break;
+
+        case "E":
+            input.Text += "E";
+            break;
+
+        case "sqrt":
+            input.Text += "sqrt(";
+            break;
+
+        case "pow":
+            input.Text += "^";
+            break;
+
+        case "log":
+            input.Text += "log(";
+            break;
+        }
+    }
 }
