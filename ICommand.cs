@@ -89,7 +89,7 @@ internal struct PushCommand(double Value) : ICommand
     }
 }
 
-internal struct FunctionCommand(Function f) : ICommand
+internal struct FunctionCommand(MathFunc f) : ICommand
 {
     public void Execute(Stack<double> stack)
     {
