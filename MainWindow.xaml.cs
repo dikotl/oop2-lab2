@@ -158,6 +158,10 @@ public partial class MainWindow : Window
             input.Text += "E";
             break;
 
+        case "abs":
+            input.Text += "abs(";
+            break;
+
         case "sqrt":
             input.Text += "sqrt(";
             break;

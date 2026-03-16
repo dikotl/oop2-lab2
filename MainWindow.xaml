@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Calculator"
-        Height="400"
+        Height="500"
         Width="300"
         MinWidth="350"
         Background="{StaticResource WindowBgBrush}"
@@ -75,6 +75,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -130,11 +131,6 @@
                 Foreground="{StaticResource AccentBrush}"
                 Click="ToggleScientific_Click"/>
 
-        <Button Content="↻"
-                Grid.Row="1"
-                Grid.Column="0"
-                Click="RedoButton_Click"/>
-
         <Button Content="CE"
                 Grid.Row="2"
                 Grid.Column="0"
@@ -148,121 +144,146 @@
                 BorderBrush="{StaticResource BrightRedBrush}"
                 Click="ClearButton_Click"/>
 
+        <Button Content="↻"
+                Grid.Row="2"
+                Grid.Column="2"
+                Click="RedoButton_Click"/>
+
         <Button Content="⌫"
                 Grid.Row="2"
-                Grid.Column="2"
+                Grid.Column="3"
                 Click="EraseButton_Click"/>
-
-        <Button Content="/"
-                Grid.Row="2"
-                Grid.Column="3"
-                Click="InputButton_Click"/>
-
-        <Button Content="7"
-                Grid.Row="3"
-                Grid.Column="0"
-                Click="InputButton_Click"/>
-
-        <Button Content="8"
-                Grid.Row="3"
-                Grid.Column="1"
-                Click="InputButton_Click"/>
-
-        <Button Content="9"
-                Grid.Row="3"
-                Grid.Column="2"
-                Click="InputButton_Click"/>
-
-        <Button Content="*"
-                Grid.Row="3"
-                Grid.Column="3"
-                Click="InputButton_Click"/>
-
-        <Button Content="4"
-                Grid.Row="4"
-                Grid.Column="0"
-                Click="InputButton_Click"/>
-
-        <Button Content="5"
-                Grid.Row="4"
-                Grid.Column="1"
-                Click="InputButton_Click"/>
-
-        <Button Content="6"
-                Grid.Row="4"
-                Grid.Column="2"
-                Click="InputButton_Click"/>
-
-        <Button Content="-"
-                Grid.Row="4"
-                Grid.Column="3"
-                Click="InputButton_Click"/>
-
-        <Button Content="1"
-                Grid.Row="5"
-                Grid.Column="0"
-                Click="InputButton_Click"/>
-
-        <Button Content="2"
-                Grid.Row="5"
-                Grid.Column="1"
-                Click="InputButton_Click"/>
-
-        <Button Content="3"
-                Grid.Row="5"
-                Grid.Column="2"
-                Click="InputButton_Click"/>
-
-        <Button Content="+"
-                Grid.Row="5"
-                Grid.Column="3"
-                Click="InputButton_Click"/>
-
-        <Button Content="00"
-                Grid.Row="6"
-                Grid.Column="0"
-                Click="InputButton_Click"/>
-
-        <Button Content="0"
-                Grid.Row="6"
-                Grid.Column="1"
-                Click="InputButton_Click"/>
-
-        <Button Content="."
-                Grid.Row="6"
-                Grid.Column="2"
-                Click="InputButton_Click"/>
-
-        <Button x:Name="btnEval"
-                Content="="
-                Grid.Row="6"
-                Grid.Column="3"
-                Background="{StaticResource GreenBrush}"
-                IsDefault="True"
-                Click="EvalButton_Click"/>
 
         <Button Content="Pi"
                 Grid.Row="2"
                 Grid.Column="4"
                 Click="MathFunc_Click"/>
 
+        <Button Content="("
+                Grid.Row="3"
+                Grid.Column="0"
+                Click="InputButton_Click"/>
+
+        <Button Content=")"
+                Grid.Row="3"
+                Grid.Column="1"
+                Click="InputButton_Click"/>
+
+        <Button Content="%"
+                Grid.Row="3"
+                Grid.Column="2"
+                Click="InputButton_Click"/>
+
+        <Button Content="/"
+                Grid.Row="3"
+                Grid.Column="3"
+                Click="InputButton_Click"/>
+
         <Button Content="E"
                 Grid.Row="3"
                 Grid.Column="4"
                 Click="MathFunc_Click"/>
 
-        <Button Content="sqrt"
+        <Button Content="7"
+                Grid.Row="4"
+                Grid.Column="0"
+                Click="InputButton_Click"/>
+
+        <Button Content="8"
+                Grid.Row="4"
+                Grid.Column="1"
+                Click="InputButton_Click"/>
+
+        <Button Content="9"
+                Grid.Row="4"
+                Grid.Column="2"
+                Click="InputButton_Click"/>
+
+        <Button Content="*"
+                Grid.Row="4"
+                Grid.Column="3"
+                Click="InputButton_Click"/>
+
+        <Button Content="abs"
                 Grid.Row="4"
                 Grid.Column="4"
                 Click="MathFunc_Click"/>
 
-        <Button Content="pow"
+        <Button Content="4"
+                Grid.Row="5"
+                Grid.Column="0"
+                Click="InputButton_Click"/>
+
+        <Button Content="5"
+                Grid.Row="5"
+                Grid.Column="1"
+                Click="InputButton_Click"/>
+
+        <Button Content="6"
+                Grid.Row="5"
+                Grid.Column="2"
+                Click="InputButton_Click"/>
+
+        <Button Content="-"
+                Grid.Row="5"
+                Grid.Column="3"
+                Click="InputButton_Click"/>
+
+        <Button Content="sqrt"
                 Grid.Row="5"
                 Grid.Column="4"
                 Click="MathFunc_Click"/>
 
-        <Button Content="log"
+        <Button Content="1"
                 Grid.Row="6"
+                Grid.Column="0"
+                Click="InputButton_Click"/>
+
+        <Button Content="2"
+                Grid.Row="6"
+                Grid.Column="1"
+                Click="InputButton_Click"/>
+
+        <Button Content="3"
+                Grid.Row="6"
+                Grid.Column="2"
+                Click="InputButton_Click"/>
+
+        <Button Content="+"
+                Grid.Row="6"
+                Grid.Column="3"
+                Click="InputButton_Click"/>
+
+        <Button Content="pow"
+                Grid.Row="6"
+                Grid.Column="4"
+                Click="MathFunc_Click"/>
+
+        <Button Content="00"
+                Grid.Row="7"
+                Grid.Column="0"
+                Click="InputButton_Click"/>
+
+        <Button Content="0"
+                Grid.Row="7"
+                Grid.Column="1"
+                Click="InputButton_Click"/>
+
+        <Button Content="."
+                Grid.Row="7"
+                Grid.Column="2"
+                Click="InputButton_Click"/>
+
+        <Button x:Name="btnEval"
+                Content="="
+                Grid.Row="7"
+                Grid.Column="3"
+                Background="{StaticResource GreenBrush}"
+                IsDefault="True"
+                Click="EvalButton_Click"/>
+
+        <Button Content="log"
+                Grid.Row="7"
                 Grid.Column="4"
                 Click="MathFunc_Click"/>
     </Grid>
