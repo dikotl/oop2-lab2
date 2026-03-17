@@ -17,20 +17,19 @@ public partial class MainWindow : Window
     private Stack<HistoryEntry> _redoStack = [];
     private bool _isScientificVisible = false;
 
-    private HistoryEntry CurrentEntry => new(input.Text, output.Text);
-
     public MainWindow()
     {
         InitializeComponent();
         input.Focus();
     }
 
+    private void SaveState()
+    {
+        _undoStack.Push(new HistoryEntry(input.Text, output.Text));
+    }
+
     private void InputButton_Click(object sender, RoutedEventArgs e)
     {
-        // New input breaks the redo chain.
-        _undoStack.Push(CurrentEntry);
-        _redoStack.Clear();
-
         input.Text += ((Button)sender).Content;
     }
 
@@ -43,17 +42,18 @@ public partial class MainWindow : Window
         catch (ParseException ex)
         {
             output.Text = $"{ex.Message}";
-            return;
         }
         catch (ExecutionException ex)
         {
             output.Text = $"Error! {ex.Message}";
-            return;
         }
         catch (Exception)
         {
             output.Text = "Internal error!";
-            return;
+        }
+        finally
+        {
+            SaveState();
         }
     }
 
@@ -68,7 +68,7 @@ public partial class MainWindow : Window
         if (_undoStack.TryPop(out HistoryEntry? entry))
         {
             // Store the current state so we can redo.
-            _redoStack.Push(CurrentEntry);
+            _redoStack.Push(entry);
 
             // Restore previous entry.
             input.Text = entry.Input;
@@ -85,9 +85,8 @@ public partial class MainWindow : Window
     {
         if (_redoStack.TryPop(out HistoryEntry? entry))
         {
-
             // Save the current state to undo before jumping forward.
-            _undoStack.Push(CurrentEntry);
+            _undoStack.Push(entry);
 
             // Restore the entry.
             input.Text = entry.Input;
