@@ -5,17 +5,16 @@ using System.Windows.Media.Animation;
 
 namespace Calculator;
 
-internal record HistoryEntry(string Input, string Output);
-
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
     private Evaluator _evaluator = new();
-    private Stack<HistoryEntry> _undoStack = [];
-    private Stack<HistoryEntry> _redoStack = [];
+    private List<string> _inputHistory = [""];
+    private int _historyPointer = -1;
     private bool _isScientificVisible = false;
+    private bool _inHistory = false;
 
     public MainWindow()
     {
@@ -23,13 +22,15 @@ public partial class MainWindow : Window
         input.Focus();
     }
 
-    private void SaveState()
+    private void QuitHistory()
     {
-        _undoStack.Push(new HistoryEntry(input.Text, output.Text));
+        _historyPointer = -1;
+        _inHistory = false;
     }
 
     private void InputButton_Click(object sender, RoutedEventArgs e)
     {
+        QuitHistory();
         input.Text += ((Button)sender).Content;
     }
 
@@ -53,49 +54,45 @@ public partial class MainWindow : Window
         }
         finally
         {
-            SaveState();
+            if (!_inHistory) _inputHistory.Add(input.Text);
         }
     }
 
     private void ClearButton_Click(object sender, RoutedEventArgs e)
     {
+        QuitHistory();
         input.Text = "";
         output.Text = "";
     }
 
     private void UndoButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_undoStack.TryPop(out HistoryEntry? entry))
+        _historyPointer = _historyPointer switch
         {
-            // Store the current state so we can redo.
-            _redoStack.Push(entry);
-
-            // Restore previous entry.
-            input.Text = entry.Input;
-            output.Text = entry.Output;
-        }
-        else
-        {
-            // Nothing was evaluated yet, same as clear.
-            ClearButton_Click(sender, new());
-        }
+            0 => 0,
+            < 0 when _inputHistory.Count > 1 => _inputHistory.Count - (input.Text == _inputHistory[^1] ? 2 : 1),
+            < 0 => _inputHistory.Count - 1,
+            > 0 => _historyPointer - 1,
+        };
+        input.Text = _inputHistory[_historyPointer];
+        _inHistory = true;
+        EvalButton_Click(this, new());
     }
 
     private void RedoButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_redoStack.TryPop(out HistoryEntry? entry))
+        if (_historyPointer >= 0 && _historyPointer < _inputHistory.Count - 1)
         {
-            // Save the current state to undo before jumping forward.
-            _undoStack.Push(entry);
-
-            // Restore the entry.
-            input.Text = entry.Input;
-            output.Text = entry.Output;
+            input.Text = _inputHistory[++_historyPointer];
+            _inHistory = true;
+            EvalButton_Click(this, new());
         }
     }
 
     private void EraseButton_Click(object sender, RoutedEventArgs e)
     {
+        QuitHistory();
+
         if (input.Text.Length > 0)
         {
             input.Text = input.Text[..^1];
@@ -104,6 +101,8 @@ public partial class MainWindow : Window
 
     private void Input_KeyDown(object sender, KeyEventArgs e)
     {
+        QuitHistory();
+
         if (e.Key == Key.Enter)
         {
             e.Handled = true;
@@ -113,6 +112,8 @@ public partial class MainWindow : Window
 
     private void ToggleScientific_Click(object sender, RoutedEventArgs e)
     {
+        QuitHistory();
+
         // TODO: fix window resizing may break the animation start.
 
         var widthAnimation = new DoubleAnimation
@@ -147,6 +148,8 @@ public partial class MainWindow : Window
 
     private void MathFunc_Click(object sender, RoutedEventArgs e)
     {
+        QuitHistory();
+
         switch (((Button)sender).Content)
         {
         case "Pi":
