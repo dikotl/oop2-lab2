@@ -4,12 +4,12 @@ internal class ExecutionException(string Message) : Exception(Message);
 
 internal interface ICommand
 {
-    void Execute(Stack<double> stack);
+    void Execute(Stack<double> stack, Dictionary<string, double> variables);
 }
 
 internal struct AddCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -19,7 +19,7 @@ internal struct AddCommand : ICommand
 
 internal struct SubtractCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -29,7 +29,7 @@ internal struct SubtractCommand : ICommand
 
 internal struct MultiplyCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -39,7 +39,7 @@ internal struct MultiplyCommand : ICommand
 
 internal struct DivideCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -56,7 +56,7 @@ internal struct DivideCommand : ICommand
 
 internal struct RemainderCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -73,7 +73,7 @@ internal struct RemainderCommand : ICommand
 
 internal struct PowerCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         var b = stack.Pop();
@@ -83,15 +83,23 @@ internal struct PowerCommand : ICommand
 
 internal struct PushCommand(double Value) : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         stack.Push(Value);
     }
 }
 
+internal struct StoreCommand(string Name) : ICommand
+{
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
+    {
+        variables[Name] = stack.Peek();
+    }
+}
+
 internal struct FunctionCommand(MathFunc f) : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var args = new double[f.ArgsCount];
 
@@ -106,7 +114,7 @@ internal struct FunctionCommand(MathFunc f) : ICommand
 
 internal struct NegateCommand : ICommand
 {
-    public void Execute(Stack<double> stack)
+    public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
         var a = stack.Pop();
         stack.Push(-a);

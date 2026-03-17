@@ -47,7 +47,7 @@ internal class Evaluator
 
         foreach (ICommand command in commands)
         {
-            command.Execute(stack);
+            command.Execute(stack, variables);
         }
 
         if (stack.Count != 1)
@@ -63,6 +63,11 @@ internal class Evaluator
         if (node is Ast.Number number)
         {
             commands.Add(new PushCommand(number.Value));
+        }
+        else if (node is Ast.DefineVariable def)
+        {
+            FlattenAST(def.Value, commands);
+            commands.Add(new StoreCommand(def.Name));
         }
         else if (node is Ast.Variable variable)
         {

@@ -3,6 +3,7 @@ namespace Calculator;
 internal abstract record Ast
 {
     internal sealed record Number(double Value) : Ast;
+    internal sealed record DefineVariable(string Name, Ast Value) : Ast;
     internal sealed record Variable(string Name) : Ast;
     internal sealed record Function(string Name, Ast[] Args) : Ast;
     internal sealed record BinaryOperation(Ast X, Ast Y, BinaryOp Kind) : Ast;

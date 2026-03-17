@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -33,17 +34,17 @@ internal struct Parser
 
     private readonly Dictionary<BinaryOp, int> _operatorPrecedence = new()
     {
-        [BinaryOp.Add] = 2,
-        [BinaryOp.Subtract] = 2,
-        [BinaryOp.Multiply] = 3,
-        [BinaryOp.Divide] = 3,
-        [BinaryOp.Remainder] = 3,
-        [BinaryOp.Power] = 4,
+        [BinaryOp.Add] = 3,
+        [BinaryOp.Subtract] = 3,
+        [BinaryOp.Multiply] = 4,
+        [BinaryOp.Divide] = 4,
+        [BinaryOp.Remainder] = 4,
+        [BinaryOp.Power] = 5,
     };
 
     public Ast Parse()
     {
-        Ast ast = ParseBinary();
+        Ast ast = ParsePossiblyAssignment();
 
         switch (_kind)
         {
@@ -58,9 +59,29 @@ internal struct Parser
         }
     }
 
-    private Ast ParseBinary(int precedence = 1)
+    private Ast ParsePossiblyAssignment()
     {
-        Ast x = ParsePrefix();
+        if (_kind == TokenKind.Name)
+        {
+            string name = _name;
+            NextToken();
+            if (_kind == TokenKind.Store)
+            {
+                NextToken();
+                return new Ast.DefineVariable(name, ParseBinary());
+            }
+            if (_kind == TokenKind.LeParen)
+            {
+                return ParseFunction(name);
+            }
+            return ParseBinary(x: new Ast.Variable(name));
+        }
+        return ParseBinary();
+    }
+
+    private Ast ParseBinary(int precedence = 1, Ast? x = null)
+    {
+        x ??= ParsePrefix();
 
         while (_operators.TryGetValue(_kind, out BinaryOp op) && _operatorPrecedence[op] >= precedence)
         {
@@ -95,23 +116,7 @@ internal struct Parser
         case TokenKind.Name:
             string name = _name;
             NextToken();
-
-            if (_kind == TokenKind.LeParen)
-            {
-                NextToken();
-                List<Ast> args = [];
-                while (true)
-                {
-                    args.Add(ParseBinary());
-
-                    if (_kind == TokenKind.RiParen) break;
-                    else if (_kind == TokenKind.Comma) NextToken();
-                    else throw new ParseException("Expected comma or end of argument list");
-                }
-                NextToken();
-                return new Ast.Function(name, args.ToArray());
-            }
-
+            if (_kind == TokenKind.LeParen) return ParseFunction(name);
             return new Ast.Variable(name);
 
         case TokenKind.Number:
@@ -137,6 +142,23 @@ internal struct Parser
         default:
             throw new ParseException("Expected operand");
         }
+    }
+
+    private Ast ParseFunction(string name)
+    {
+        if (_kind != TokenKind.LeParen) throw new UnreachableException("No check was before");
+        NextToken();
+        List<Ast> args = [];
+        while (true)
+        {
+            args.Add(ParseBinary());
+
+            if (_kind == TokenKind.RiParen) break;
+            else if (_kind == TokenKind.Comma) NextToken();
+            else throw new ParseException("Expected comma or end of argument list");
+        }
+        NextToken();
+        return new Ast.Function(name, args.ToArray());
     }
 
     private void NextToken()
@@ -197,6 +219,13 @@ internal struct Parser
                 Advance();
                 return (kind, "");
             }
+            if (Peek == ':')
+            {
+                Advance();
+                if (Peek != '=') throw new ParseException("Expected '=' after ':'");
+                Advance();
+                return (TokenKind.Store, "");
+            }
 
             throw new ParseException($"Illegal character: '{Peek}'");
         }
@@ -235,5 +264,6 @@ internal struct Parser
         LeParen,
         RiParen,
         Comma,
+        Store,
     }
 }
