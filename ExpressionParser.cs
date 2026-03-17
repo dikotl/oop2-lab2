@@ -6,7 +6,7 @@ namespace Calculator;
 
 internal class ParseException(string Message) : Exception(Message);
 
-internal struct Parser
+internal struct ExpressionParser
 {
     private const int RECURSION_DEPTH_LIMIT = 64;
 
@@ -15,7 +15,7 @@ internal struct Parser
     private string _name;
     private Tokenizer _tokenizer;
 
-    public Parser(string input)
+    public ExpressionParser(string input)
     {
         _depth = 0;
         _tokenizer = new(input);
@@ -42,9 +42,9 @@ internal struct Parser
         [BinaryOp.Power] = 5,
     };
 
-    public Ast Parse()
+    public Expression ParseExpression()
     {
-        Ast ast = ParsePossiblyAssignment();
+        Expression ast = ParsePossiblyAssignment();
 
         switch (_kind)
         {
@@ -59,7 +59,7 @@ internal struct Parser
         }
     }
 
-    private Ast ParsePossiblyAssignment()
+    private Expression ParsePossiblyAssignment()
     {
         if (_kind == TokenKind.Name)
         {
@@ -68,37 +68,37 @@ internal struct Parser
             if (_kind == TokenKind.Store)
             {
                 NextToken();
-                return new Ast.DefineVariable(name, ParseBinary());
+                return new Expression.DefineVariable(name, ParseBinary());
             }
             if (_kind == TokenKind.LeParen)
             {
                 return ParseFunction(name);
             }
-            return ParseBinary(x: new Ast.Variable(name));
+            return ParseBinary(x: new Expression.Variable(name));
         }
         return ParseBinary();
     }
 
-    private Ast ParseBinary(int precedence = 1, Ast? x = null)
+    private Expression ParseBinary(int precedence = 1, Expression? x = null)
     {
         x ??= ParsePrefix();
 
         while (_operators.TryGetValue(_kind, out BinaryOp op) && _operatorPrecedence[op] >= precedence)
         {
             NextToken();
-            x = new Ast.BinaryOperation(x, ParseBinary(_operatorPrecedence[op] + 1), op);
+            x = new Expression.BinaryOperation(x, ParseBinary(_operatorPrecedence[op] + 1), op);
         }
 
         return x;
     }
 
-    private Ast ParsePrefix()
+    private Expression ParsePrefix()
     {
         switch (_kind)
         {
         case TokenKind.Minus:
             NextToken();
-            return new Ast.UnaryOperation(ParsePrefix(), UnaryOp.Negate);
+            return new Expression.UnaryOperation(ParsePrefix(), UnaryOp.Negate);
 
         case TokenKind.Plus:
             NextToken();
@@ -109,7 +109,7 @@ internal struct Parser
         }
     }
 
-    private Ast ParseOperand()
+    private Expression ParseOperand()
     {
         switch (_kind)
         {
@@ -117,13 +117,13 @@ internal struct Parser
             string name = _name;
             NextToken();
             if (_kind == TokenKind.LeParen) return ParseFunction(name);
-            return new Ast.Variable(name);
+            return new Expression.Variable(name);
 
         case TokenKind.Number:
             _name = _name.Replace(',', '.');
             double.TryParse(_name, NumberStyles.Any, CultureInfo.InvariantCulture, out double value);
             NextToken();
-            return new Ast.Number(value);
+            return new Expression.Number(value);
 
         case TokenKind.LeParen:
             NextToken();
@@ -144,11 +144,11 @@ internal struct Parser
         }
     }
 
-    private Ast ParseFunction(string name)
+    private Expression ParseFunction(string name)
     {
         if (_kind != TokenKind.LeParen) throw new UnreachableException("No check was before");
         NextToken();
-        List<Ast> args = [];
+        List<Expression> args = [];
         while (true)
         {
             args.Add(ParseBinary());
@@ -158,7 +158,7 @@ internal struct Parser
             else throw new ParseException("Expected comma or end of argument list");
         }
         NextToken();
-        return new Ast.Function(name, args.ToArray());
+        return new Expression.Function(name, args.ToArray());
     }
 
     private void NextToken()
@@ -169,7 +169,24 @@ internal struct Parser
         }
     }
 
-    internal struct Tokenizer(string input)
+    private enum TokenKind
+    {
+        EOF,
+        Number,
+        Name,
+        Plus,
+        Minus,
+        Asterisk,
+        Slash,
+        Percent,
+        Caret,
+        LeParen,
+        RiParen,
+        Comma,
+        Store,
+    }
+
+    private struct Tokenizer(string input)
     {
         private char[] _input = input.ToCharArray();
         private int _index = 0;
@@ -248,22 +265,5 @@ internal struct Parser
             }
             return buf.ToString();
         }
-    }
-
-    internal enum TokenKind
-    {
-        EOF,
-        Number,
-        Name,
-        Plus,
-        Minus,
-        Asterisk,
-        Slash,
-        Percent,
-        Caret,
-        LeParen,
-        RiParen,
-        Comma,
-        Store,
     }
 }

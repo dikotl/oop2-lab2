@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Diagnostics;
 
 namespace Calculator;
@@ -8,15 +7,15 @@ namespace Calculator;
 /// </summary>
 internal record MathFunc(int ArgsCount, Func<double[], double> F);
 
-internal class Evaluator
+internal class ExpressionEvaluator
 {
-    private Dictionary<string, double> variables = new()
+    private Dictionary<string, double> _variables = new()
     {
         ["Pi"] = double.Pi,
         ["E"] = double.E,
     };
 
-    private Dictionary<string, MathFunc> functions = new()
+    private Dictionary<string, MathFunc> _functions = new()
     {
         ["sqrt"] = new MathFunc(1, (args) => Math.Sqrt(args[0])),
         ["pow"] = new MathFunc(2, (args) => Math.Pow(args[0], args[1])),
@@ -39,15 +38,15 @@ internal class Evaluator
 
     public double Eval(string input)
     {
-        var ast = new Parser(input).Parse();
         var stack = new Stack<double>();
-        var commands = new List<ICommand>();
+        var commands = new List<ICommand>(capacity: 64);
+        var expression = new ExpressionParser(input).ParseExpression();
 
-        FlattenAST(ast, commands);
+        FlattenAST(expression, commands);
 
         foreach (ICommand command in commands)
         {
-            command.Execute(stack, variables);
+            command.Execute(stack, _variables);
         }
 
         if (stack.Count != 1)
@@ -58,28 +57,28 @@ internal class Evaluator
         return stack.Pop();
     }
 
-    private void FlattenAST(Ast node, List<ICommand> commands)
+    private void FlattenAST(Expression expression, List<ICommand> commands)
     {
-        if (node is Ast.Number number)
+        if (expression is Expression.Number number)
         {
             commands.Add(new PushCommand(number.Value));
         }
-        else if (node is Ast.DefineVariable def)
+        else if (expression is Expression.DefineVariable def)
         {
             FlattenAST(def.Value, commands);
             commands.Add(new StoreCommand(def.Name));
         }
-        else if (node is Ast.Variable variable)
+        else if (expression is Expression.Variable variable)
         {
-            if (!variables.TryGetValue(variable.Name, out double value))
+            if (!_variables.TryGetValue(variable.Name, out double value))
             {
                 throw new ExecutionException($"Variable '{variable.Name}' is not defined");
             }
             commands.Add(new PushCommand(value));
         }
-        else if (node is Ast.Function function)
+        else if (expression is Expression.Function function)
         {
-            if (!functions.TryGetValue(function.Name, out MathFunc? f))
+            if (!_functions.TryGetValue(function.Name, out MathFunc? f))
             {
                 throw new ExecutionException($"Unknown function '{function.Name}'");
             }
@@ -93,7 +92,7 @@ internal class Evaluator
             }
             commands.Add(new FunctionCommand(f));
         }
-        else if (node is Ast.BinaryOperation binary)
+        else if (expression is Expression.BinaryOperation binary)
         {
             FlattenAST(binary.Y, commands);
             FlattenAST(binary.X, commands);
@@ -108,14 +107,14 @@ internal class Evaluator
                 _ => throw new UnreachableException($"Unhandled binary operation: {binary.Kind}"),
             });
         }
-        else if (node is Ast.UnaryOperation unary)
+        else if (expression is Expression.UnaryOperation unary)
         {
             FlattenAST(unary.X, commands);
             commands.Add(new NegateCommand());
         }
         else
         {
-            throw new UnreachableException($"Unhandled AST node: {node}");
+            throw new UnreachableException($"Unhandled AST node: {expression}");
         }
     }
 }

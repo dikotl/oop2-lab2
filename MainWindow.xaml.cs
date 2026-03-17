@@ -10,7 +10,7 @@ namespace Calculator;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private Evaluator _evaluator = new();
+    private ExpressionEvaluator _evaluator = new();
     private List<string> _inputHistory = [""];
     private int _historyPointer = -1;
     private bool _isScientificVisible = false;
