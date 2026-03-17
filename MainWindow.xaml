@@ -101,7 +101,7 @@
                      HorizontalAlignment="Right"
                      VerticalAlignment="Bottom">
                 <TextBox x:Name="input"
-                         Text="0"
+                         Text=""
                          FontSize="48"
                          Foreground="{StaticResource TextBrush}"
                          Background="Transparent"
