@@ -86,9 +86,9 @@ internal class ExpressionEvaluator
             {
                 throw new ExecutionException($"Expected {f.ArgsCount} arguments for '{function.Name}'");
             }
-            foreach (var arg in function.Args)
+            for (int i = function.Args.Length - 1; i >= 0; --i)
             {
-                FlattenAST(arg, commands);
+                FlattenAST(function.Args[i], commands);
             }
             commands.Add(new FunctionCommand(f));
         }
