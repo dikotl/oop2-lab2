@@ -71,7 +71,7 @@ internal struct RemainderCommand : ICommand
     }
 }
 
-internal struct PowerCommand : ICommand
+internal struct PowCommand : ICommand
 {
     public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {
@@ -89,7 +89,7 @@ internal struct PushCommand(double Value) : ICommand
     }
 }
 
-internal struct StoreCommand(string Name) : ICommand
+internal struct DefineCommand(string Name) : ICommand
 {
     public void Execute(Stack<double> stack, Dictionary<string, double> variables)
     {

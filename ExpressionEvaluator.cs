@@ -17,23 +17,23 @@ internal class ExpressionEvaluator
 
     private Dictionary<string, MathFunc> _functions = new()
     {
-        ["sqrt"] = new MathFunc(1, (args) => Math.Sqrt(args[0])),
-        ["pow"] = new MathFunc(2, (args) => Math.Pow(args[0], args[1])),
-        ["ln"] = new MathFunc(1, (args) => Math.Log(args[0])),
-        ["log"] = new MathFunc(2, (args) => Math.Log(args[0], args[1])),
-        ["abs"] = new MathFunc(1, (args) => Math.Abs(args[0])),
-        ["sin"] = new MathFunc(1, (args) => Math.Sin(args[0])),
-        ["cos"] = new MathFunc(1, (args) => Math.Cos(args[0])),
-        ["tan"] = new MathFunc(1, (args) => Math.Tan(args[0])),
-        ["cot"] = new MathFunc(1, (args) => 1 / Math.Tan(args[0])),
-        ["sec"] = new MathFunc(1, (args) => 1 / Math.Cos(args[0])),
-        ["csc"] = new MathFunc(1, (args) => 1 / Math.Sin(args[0])),
-        ["sinh"] = new MathFunc(1, (args) => Math.Sinh(args[0])),
-        ["cosh"] = new MathFunc(1, (args) => Math.Cosh(args[0])),
-        ["tanh"] = new MathFunc(1, (args) => Math.Tanh(args[0])),
-        ["coth"] = new MathFunc(1, (args) => (Math.Exp(args[0]) + Math.Exp(-args[0])) / (Math.Exp(args[0]) - Math.Exp(-args[0]))),
-        ["sech"] = new MathFunc(1, (args) => 2 / (Math.Exp(args[0]) + Math.Exp(-args[0]))),
-        ["csch"] = new MathFunc(1, (args) => 2 / (Math.Exp(args[0]) - Math.Exp(-args[0]))),
+        ["sqrt"] = new MathFunc(1, a => Math.Sqrt(a[0])),
+        ["pow"] = new MathFunc(2, a => Math.Pow(a[0], a[1])),
+        ["ln"] = new MathFunc(1, a => Math.Log(a[0])),
+        ["log"] = new MathFunc(2, a => Math.Log(a[0], a[1])),
+        ["abs"] = new MathFunc(1, a => Math.Abs(a[0])),
+        ["sin"] = new MathFunc(1, a => Math.Sin(a[0])),
+        ["cos"] = new MathFunc(1, a => Math.Cos(a[0])),
+        ["tan"] = new MathFunc(1, a => Math.Tan(a[0])),
+        ["cot"] = new MathFunc(1, a => 1 / Math.Tan(a[0])),
+        ["sec"] = new MathFunc(1, a => 1 / Math.Cos(a[0])),
+        ["csc"] = new MathFunc(1, a => 1 / Math.Sin(a[0])),
+        ["sinh"] = new MathFunc(1, a => Math.Sinh(a[0])),
+        ["cosh"] = new MathFunc(1, a => Math.Cosh(a[0])),
+        ["tanh"] = new MathFunc(1, a => Math.Tanh(a[0])),
+        ["coth"] = new MathFunc(1, a => (Math.Exp(a[0]) + Math.Exp(-a[0])) / (Math.Exp(a[0]) - Math.Exp(-a[0]))),
+        ["sech"] = new MathFunc(1, a => 2 / (Math.Exp(a[0]) + Math.Exp(-a[0]))),
+        ["csch"] = new MathFunc(1, a => 2 / (Math.Exp(a[0]) - Math.Exp(-a[0]))),
     };
 
     public double Eval(string input)
@@ -65,8 +65,9 @@ internal class ExpressionEvaluator
         }
         else if (expression is Expression.DefineVariable def)
         {
+            // TODO: evaluate the value and put into `this._variables`.
             FlattenAST(def.Value, commands);
-            commands.Add(new StoreCommand(def.Name));
+            commands.Add(new DefineCommand(def.Name));
         }
         else if (expression is Expression.Variable variable)
         {
@@ -103,7 +104,7 @@ internal class ExpressionEvaluator
                 BinaryOp.Multiply => new MultiplyCommand(),
                 BinaryOp.Divide => new DivideCommand(),
                 BinaryOp.Remainder => new RemainderCommand(),
-                BinaryOp.Power => new PowerCommand(),
+                BinaryOp.Power => new PowCommand(),
                 _ => throw new UnreachableException($"Unhandled binary operation: {binary.Kind}"),
             });
         }
