@@ -36,11 +36,24 @@ internal class ExpressionEvaluator
         ["csch"] = new MathFunc(1, a => 2 / (Math.Exp(a[0]) - Math.Exp(-a[0]))),
     };
 
-    public double Eval(string input)
+    internal Expects ExpectsForText(string input)
+    {
+        try
+        {
+            var (_, expected) = new ExpressionParser(input).ParseExpression();
+            return expected;
+        }
+        catch (ParseException ex)
+        {
+            return ex.Expected;
+        }
+    }
+
+    public (double, Expects) Eval(string input)
     {
         var stack = new Stack<double>();
         var commands = new List<ICommand>(capacity: 64);
-        var expression = new ExpressionParser(input).ParseExpression();
+        var (expression, expected) = new ExpressionParser(input).ParseExpression();
 
         FlattenAST(expression, commands);
 
@@ -54,7 +67,7 @@ internal class ExpressionEvaluator
             throw new UnreachableException("AST flattening implementation bug");
         }
 
-        return stack.Pop();
+        return (stack.Pop(), expected);
     }
 
     private void FlattenAST(Expression expression, List<ICommand> commands)

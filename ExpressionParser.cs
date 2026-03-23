@@ -4,22 +4,55 @@ using System.Text;
 
 namespace Calculator;
 
-internal class ParseException(string Message) : Exception(Message);
+internal class ParseException(string Message, Expects Expected) : Exception(Message)
+{
+    public Expects Expected { get; init; } = Expected;
+}
+
+[Flags]
+internal enum Expects
+{
+    Digit = 1 << 0,
+    DigitAfterDot = 1 << 1,
+    Dot = 1 << 2,
+    Comma = 1 << 3,
+    Name = 1 << 4,
+    Unary = 1 << 5,
+    Binary = 1 << 6,
+    LeParen = 1 << 7,
+    RiParen = 1 << 8,
+    Store = 1 << 9,
+}
 
 internal struct ExpressionParser
 {
+    internal const Expects EXPECTED_OPERAND = Expects.Name | Expects.Digit | Expects.Unary | Expects.LeParen;
+
     private const int RECURSION_DEPTH_LIMIT = 64;
 
-    private int _depth;
+    private Tokenizer _tokenizer;
     private TokenKind _kind;
     private string _name;
-    private Tokenizer _tokenizer;
+    private int _depth;
+    private Expects? _expectedFromTokenizer;
+
+    public Expects Expected
+    {
+        get;
+        private set
+        {
+            Debug.WriteLine($"Expected {value}");
+            field = value;
+        }
+    }
 
     public ExpressionParser(string input)
     {
         _depth = 0;
         _tokenizer = new(input);
-        (_kind, _name) = _tokenizer.NextToken();
+        _name = "";
+
+        AdvanceToken(expected: EXPECTED_OPERAND);
     }
 
     private readonly Dictionary<TokenKind, BinaryOp> _operators = new()
@@ -42,20 +75,20 @@ internal struct ExpressionParser
         [BinaryOp.Power] = 5,
     };
 
-    public Expression ParseExpression()
+    public (Expression, Expects) ParseExpression()
     {
         Expression ast = ParsePossiblyAssignment();
 
         switch (_kind)
         {
         case TokenKind.EOF:
-            return ast;
+            return (ast, Expected);
 
         case TokenKind.RiParen:
-            throw new ParseException("Unexpected closing parenthesis");
+            throw new ParseException("Unexpected closing parenthesis", Expected);
 
         default:
-            throw new ParseException("Expected end of input");
+            throw new ParseException("Expected end of input", 0);
         }
     }
 
@@ -64,10 +97,10 @@ internal struct ExpressionParser
         if (_kind == TokenKind.Name)
         {
             string name = _name;
-            NextToken();
+            NextToken(expected: Expects.Store | Expects.Binary | Expects.LeParen);
             if (_kind == TokenKind.Store)
             {
-                NextToken();
+                NextToken(expected: EXPECTED_OPERAND);
                 return new Expression.DefineVariable(name, ParseBinary());
             }
             if (_kind == TokenKind.LeParen)
@@ -85,7 +118,7 @@ internal struct ExpressionParser
 
         while (_operators.TryGetValue(_kind, out BinaryOp op) && _operatorPrecedence[op] >= precedence)
         {
-            NextToken();
+            NextToken(expected: EXPECTED_OPERAND & ~Expects.Unary);
             x = new Expression.BinaryOperation(x, ParseBinary(_operatorPrecedence[op] + 1), op);
         }
 
@@ -97,11 +130,11 @@ internal struct ExpressionParser
         switch (_kind)
         {
         case TokenKind.Minus:
-            NextToken();
+            NextToken(expected: EXPECTED_OPERAND | Expects.Binary);
             return new Expression.UnaryOperation(ParsePrefix(), UnaryOp.Negate);
 
         case TokenKind.Plus:
-            NextToken();
+            NextToken(expected: EXPECTED_OPERAND | Expects.Binary);
             return ParsePrefix();
 
         default:
@@ -115,58 +148,69 @@ internal struct ExpressionParser
         {
         case TokenKind.Name:
             string name = _name;
-            NextToken();
+            NextToken(expected: Expects.Binary | Expects.LeParen); // Includes '('.
             if (_kind == TokenKind.LeParen) return ParseFunction(name);
             return new Expression.Variable(name);
 
         case TokenKind.Number:
             _name = _name.Replace(',', '.');
             double.TryParse(_name, NumberStyles.Any, CultureInfo.InvariantCulture, out double value);
-            NextToken();
+            NextToken(expected: Expects.Binary);
             return new Expression.Number(value);
 
         case TokenKind.LeParen:
-            NextToken();
+            NextToken(expected: EXPECTED_OPERAND);
 
             ++_depth;
-            if (_depth > RECURSION_DEPTH_LIMIT) throw new ParseException("Expression is too nested");
+            if (_depth > RECURSION_DEPTH_LIMIT) throw new ParseException("Expression is too nested", 0);
 
             var expression = ParseBinary();
 
-            if (_kind != TokenKind.RiParen) throw new ParseException("Expected closing parenthesis");
-            NextToken();
+            if (_kind != TokenKind.RiParen) throw new ParseException("Expected closing parenthesis", Expects.Binary | Expects.RiParen);
+            NextToken(expected: Expects.Binary);
             --_depth;
 
             return expression;
 
         default:
-            throw new ParseException("Expected operand");
+            throw new ParseException("Expected operand", Expected);
         }
     }
 
     private Expression ParseFunction(string name)
     {
         if (_kind != TokenKind.LeParen) throw new UnreachableException("No check was before");
-        NextToken();
+        NextToken(expected: EXPECTED_OPERAND);
         List<Expression> args = [];
         while (true)
         {
             args.Add(ParseBinary());
+            Expected |= Expects.Comma;
 
             if (_kind == TokenKind.RiParen) break;
-            else if (_kind == TokenKind.Comma) NextToken();
-            else throw new ParseException("Expected comma or end of argument list");
+            else if (_kind == TokenKind.Comma) NextToken(expected: EXPECTED_OPERAND);
+            else throw new ParseException("Expected comma or end of argument list", Expects.Comma | Expects.RiParen);
         }
-        NextToken();
+        NextToken(expected: Expects.Binary);
         return new Expression.Function(name, args.ToArray());
     }
 
-    private void NextToken()
+    private void NextToken(Expects? expected)
     {
-        if (_kind != TokenKind.EOF)
+        if (_kind != TokenKind.EOF) AdvanceToken(expected);
+    }
+
+    private void AdvanceToken(Expects? expected)
+    {
+        if (expected is not null)
         {
-            (_kind, _name) = _tokenizer.NextToken();
+            Expected = (Expects)expected | (_expectedFromTokenizer ?? 0);
         }
+        else if (_expectedFromTokenizer is not null)
+        {
+            Expected = (Expects)_expectedFromTokenizer;
+        }
+        (_kind, _name, _expectedFromTokenizer) = _tokenizer.NextToken();
     }
 
     private enum TokenKind
@@ -208,43 +252,44 @@ internal struct ExpressionParser
 
         private void Advance() => ++_index;
 
-        internal (TokenKind kind, string name) NextToken()
+        internal (TokenKind kind, string name, Expects? expected) NextToken()
         {
             SkipWhile(char.IsWhiteSpace);
 
             if (Peek == '\0')
             {
-                return (TokenKind.EOF, "");
+                return (TokenKind.EOF, "", null);
             }
             if (char.IsAsciiDigit(Peek))
             {
                 string intPart = TakeWhile(char.IsAsciiDigit);
+                Expects expected = (intPart == "0") ? Expects.Dot : (Expects.Digit | Expects.Dot);
                 if (Peek == '.')
                 {
                     Advance();
                     string floatPart = TakeWhile(char.IsAsciiDigit);
-                    return (TokenKind.Number, $"{intPart}.{floatPart}");
+                    return (TokenKind.Number, $"{intPart}.{floatPart}", Expects.DigitAfterDot);
                 }
-                return (TokenKind.Number, intPart);
+                return (TokenKind.Number, intPart, expected);
             }
             if (char.IsAsciiLetter(Peek))
             {
-                return (TokenKind.Name, TakeWhile(char.IsAsciiLetter));
+                return (TokenKind.Name, TakeWhile(char.IsAsciiLetter), null);
             }
             if (_operators.TryGetValue(Peek, out TokenKind kind))
             {
                 Advance();
-                return (kind, "");
+                return (kind, "", null);
             }
             if (Peek == ':')
             {
                 Advance();
-                if (Peek != '=') throw new ParseException("Expected '=' after ':'");
+                if (Peek != '=') throw new ParseException("Expected '=' after ':'", 0);
                 Advance();
-                return (TokenKind.Store, "");
+                return (TokenKind.Store, "", null);
             }
 
-            throw new ParseException($"Illegal character: '{Peek}'");
+            throw new ParseException($"Illegal character: '{Peek}'", 0);
         }
 
         private void SkipWhile(Predicate<char> predicate)

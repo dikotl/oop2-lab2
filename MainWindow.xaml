@@ -157,122 +157,122 @@
         <Button Content="Pi"
                 Grid.Row="2"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="MathFuncButton_Click"/>
 
         <Button Content="("
                 Grid.Row="3"
                 Grid.Column="0"
-                Click="InputButton_Click"/>
+                Click="OpenParenButton_Click"/>
 
         <Button Content=")"
                 Grid.Row="3"
                 Grid.Column="1"
-                Click="InputButton_Click"/>
+                Click="CloseParenButton_Click"/>
 
         <Button Content="%"
                 Grid.Row="3"
                 Grid.Column="2"
-                Click="InputButton_Click"/>
+                Click="OperatorButton_Click"/>
 
         <Button Content="/"
                 Grid.Row="3"
                 Grid.Column="3"
-                Click="InputButton_Click"/>
+                Click="OperatorButton_Click"/>
 
         <Button Content="E"
                 Grid.Row="3"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="VariableButton_Click"/>
 
         <Button Content="7"
                 Grid.Row="4"
                 Grid.Column="0"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="8"
                 Grid.Row="4"
                 Grid.Column="1"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="9"
                 Grid.Row="4"
                 Grid.Column="2"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="*"
                 Grid.Row="4"
                 Grid.Column="3"
-                Click="InputButton_Click"/>
+                Click="OperatorButton_Click"/>
 
         <Button Content="abs"
                 Grid.Row="4"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="MathFuncButton_Click"/>
 
         <Button Content="4"
                 Grid.Row="5"
                 Grid.Column="0"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="5"
                 Grid.Row="5"
                 Grid.Column="1"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="6"
                 Grid.Row="5"
                 Grid.Column="2"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="-"
                 Grid.Row="5"
                 Grid.Column="3"
-                Click="InputButton_Click"/>
+                Click="MinusButton_Click"/>
 
         <Button Content="sqrt"
                 Grid.Row="5"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="MathFuncButton_Click"/>
 
         <Button Content="1"
                 Grid.Row="6"
                 Grid.Column="0"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="2"
                 Grid.Row="6"
                 Grid.Column="1"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="3"
                 Grid.Row="6"
                 Grid.Column="2"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="+"
                 Grid.Row="6"
                 Grid.Column="3"
-                Click="InputButton_Click"/>
+                Click="OperatorButton_Click"/>
 
         <Button Content="pow"
                 Grid.Row="6"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="MathFuncButton_Click"/>
 
         <Button Content="00"
                 Grid.Row="7"
                 Grid.Column="0"
-                Click="InputButton_Click"/>
+                Click="ZeroesButton_Click"/>
 
         <Button Content="0"
                 Grid.Row="7"
                 Grid.Column="1"
-                Click="InputButton_Click"/>
+                Click="DigitButton_Click"/>
 
         <Button Content="."
                 Grid.Row="7"
                 Grid.Column="2"
-                Click="InputButton_Click"/>
+                Click="CommaButton_Click"/>
 
         <Button x:Name="btnEval"
                 Content="="
@@ -285,6 +285,6 @@
         <Button Content="log"
                 Grid.Row="7"
                 Grid.Column="4"
-                Click="MathFunc_Click"/>
+                Click="MathFuncButton_Click"/>
     </Grid>
 </Window>
